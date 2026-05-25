@@ -1,49 +1,48 @@
 <x-guest-layout>
-    <div class="mb-4 text-lg font-medium text-gray-900 text-center">
-        {{ __('Секрет создан!') }}
-    </div>
+    <div class="max-w-lg mx-auto w-full text-center">
+        
+        <div class="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+        </div>
+        
+        <h2 class="text-2xl font-bold mb-2">Ссылка готова</h2>
+        <p class="text-gray-500 text-sm mb-8">
+            Скопируйте и отправьте получателю. Ссылка сгорит после открытия.
+        </p>
 
-    <div class="mb-4 text-sm text-gray-600 text-center">
-        {{ __('Скопируйте ссылку ниже. Она исчезнет после первого открытия.') }}
-    </div>
+        <div class="flex items-center gap-2 mb-8">
+            <input 
+                type="text" 
+                id="secret-url" 
+                value="{{ $url }}" 
+                readonly 
+                class="block w-full rounded-lg border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-600"
+            >
+            <button 
+                type="button" 
+                onclick="copyUrl()"
+                class="rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition"
+            >
+                Копировать
+            </button>
+        </div>
 
-    <div class="mt-4 flex items-center">
-        <input 
-            type="text" 
-            id="secret-url" 
-            value="{{ $url }}" 
-            readonly 
-            class="block w-full rounded-l-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-        >
-        <button 
-            type="button" 
-            onclick="copyUrl()"
-            class="rounded-r-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-            {{ __('Копировать') }}
-        </button>
-    </div>
-
-    <script>
-        function copyUrl() {
-            const input = document.getElementById('secret-url');
-            input.select();
-            document.execCommand('copy');
-            
-            const button = event.target;
-            button.textContent = 'Скопировано!';
-            setTimeout(() => {
-                button.textContent = 'Копировать';
-            }, 2000);
-        }
-    </script>
-
-    <div class="flex justify-between items-center mt-6">
-        <a href="{{ route('home') }}" class="text-sm text-gray-600 hover:text-gray-900">
-            ← {{ __('На главную') }}
+        <a href="{{ route('secrets.create') }}" class="text-sm text-indigo-600 hover:text-indigo-500 transition">
+            Создать ещё один секрет →
         </a>
-        <a href="{{ route('secrets.create') }}" class="text-sm text-indigo-600 hover:text-indigo-500">
-            {{ __('Создать ещё секрет') }} →
-        </a>
+
+        <script>
+            function copyUrl() {
+                const input = document.getElementById('secret-url');
+                input.select();
+                navigator.clipboard.writeText(input.value);
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'Скопировано!';
+                setTimeout(() => { button.textContent = originalText; }, 1500);
+            }
+        </script>
     </div>
 </x-guest-layout>

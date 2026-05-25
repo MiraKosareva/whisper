@@ -11,6 +11,9 @@ class Secret extends Model
         'content',
         'token',
         'expires_at',
+        'user_id',
+        'max_views',
+        'current_views',
     ];
 
     protected $hidden = [
@@ -24,6 +27,11 @@ class Secret extends Model
         ];      
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public static function generateToken(): string
     {
         return hash('sha256', Str::random(40));
@@ -33,4 +41,18 @@ class Secret extends Model
     {
         return $this->expires_at->isPast();
     }
+
+    public function canBeViewed(): bool
+    {
+    return !$this->isExpired() && $this->current_views < $this->max_views;
+    }
+
+    public function incrementViews(): void
+{
+    $this->increment('current_views');
+    
+    if ($this->current_views >= $this->max_views) {
+        $this->delete();
+    }
+}
 }

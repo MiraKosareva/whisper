@@ -3,66 +3,77 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Whisper — секретные сообщения</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <title>Whisper — самоуничтожающиеся сообщения</title>
+    <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
+     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="antialiased bg-gray-50">
-    <div class="min-h-screen flex flex-col items-center justify-center">
-        <!-- Логотип и заголовок -->
-        <div class="text-center mb-10">
-            <h1 class="text-6xl font-bold text-gray-900 mb-4">
-                🤫 Whisper
-            </h1>
-            <p class="text-xl text-gray-600 max-w-md mx-auto">
-                Отправьте секретное сообщение, которое самоуничтожится после прочтения.
-            </p>
-        </div>
-
-        <!-- Как это работает -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mb-10">
-            <div class="bg-white p-6 rounded-lg shadow-sm text-center">
-                <div class="text-3xl mb-3">✍️</div>
-                <h3 class="font-semibold text-gray-900 mb-2">1. Напишите</h3>
-                <p class="text-sm text-gray-600">Введите текст секретного сообщения</p>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-sm text-center">
-                <div class="text-3xl mb-3">🔗</div>
-                <h3 class="font-semibold text-gray-900 mb-2">2. Отправьте ссылку</h3>
-                <p class="text-sm text-gray-600">Поделитесь сгенерированной ссылкой</p>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-sm text-center">
-                <div class="text-3xl mb-3">💥</div>
-                <h3 class="font-semibold text-gray-900 mb-2">3. Самоуничтожение</h3>
-                <p class="text-sm text-gray-600">После прочтения секрет исчезнет навсегда</p>
-            </div>
-        </div>
-
-        <!-- Кнопки действий -->
-        <div class="flex gap-4">
-            @auth
-                <a href="{{ route('dashboard') }}" 
-                   class="rounded-md bg-indigo-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500">
-                    В панель управления
+<body class="antialiased bg-white text-gray-900">
+    <div class="min-h-screen flex flex-col">
+        
+        <header class="border-b border-gray-100">
+            <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+                <a href="/" class="text-xl font-bold tracking-tight">
+                    whisper
                 </a>
-            @else
-                <a href="{{ route('login') }}" 
-                   class="rounded-md bg-white px-6 py-3 text-lg font-semibold text-gray-900 shadow-sm ring-1 ring-gray-300 hover:bg-gray-50">
-                    Войти
-                </a>
-                <a href="{{ route('register') }}" 
-                   class="rounded-md bg-indigo-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500">
-                    Регистрация
-                </a>
-            @endauth
-        </div>
+                <nav class="flex gap-6 text-sm">
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="hover:text-indigo-600 transition">Личный кабинет</a>
+                    @else
+                        <a href="{{ route('login') }}" class="hover:text-indigo-600 transition">Войти</a>
+                        <a href="{{ route('register') }}" class="hover:text-indigo-600 transition">Регистрация</a>
+                    @endauth
+                </nav>
+            </div>
+        </header>
 
-        <!-- Ссылка на создание секрета (доступна всем) -->
-        <div class="mt-8">
-            <a href="{{ route('secrets.create') }}" 
-               class="text-indigo-600 hover:text-indigo-500 font-semibold text-lg">
-                → Создать секретное сообщение
-            </a>
-        </div>
+        <main class="flex-1 flex items-center justify-center px-6">
+            <div class="max-w-2xl w-full text-center py-20">
+   
+                <span class="inline-block px-3 py-1 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-full mb-6">
+                    одноразовые сообщения
+                </span>
+                
+                <h1 class="text-5xl font-bold tracking-tight mb-6">
+                    Скажи и исчезни
+                </h1>
+               
+                <div class="flex justify-center mb-8">
+                    <div class="w-16 h-0.5 bg-indigo-600 animate-pulse"></div>
+                </div>
+                
+                <p class="text-lg text-gray-500 mb-10 max-w-md mx-auto leading-relaxed">
+                    Отправьте сообщение, которое будет прочитано только один раз 
+                    и навсегда исчезнет.
+                </p>
+                
+                <a href="{{ route('secrets.create') }}" 
+                   class="inline-block px-8 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition">
+                    Создать секрет
+                </a>
+                
+                <div class="grid grid-cols-3 gap-8 mt-20 text-left">
+                    <div>
+                        <div class="text-2xl mb-3 text-gray-300">01</div>
+                        <h3 class="font-semibold mb-2">Напишите</h3>
+                        <p class="text-sm text-gray-500">Текст вашего сообщения</p>
+                    </div>
+                    <div>
+                        <div class="text-2xl mb-3 text-gray-300">02</div>
+                        <h3 class="font-semibold mb-2">Отправьте</h3>
+                        <p class="text-sm text-gray-500">Ссылку получателю</p>
+                    </div>
+                    <div>
+                        <div class="text-2xl mb-3 text-gray-300">03</div>
+                        <h3 class="font-semibold mb-2">Забудьте</h3>
+                        <p class="text-sm text-gray-500">Сообщение удалится</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+      
+        <footer class="border-t border-gray-100 py-6 text-center text-xs text-gray-400">
+            whisper &middot; секреты в безопасности
+        </footer>
     </div>
 </body>
 </html>

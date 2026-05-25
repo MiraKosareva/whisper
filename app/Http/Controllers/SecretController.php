@@ -17,12 +17,16 @@ class SecretController extends Controller
     {
         $request->validate([
             'content' => ['required', 'string', 'min:1'],
+            'max_views' => ['required', 'integer', 'in:1,3,5,10'],
         ]);
 
         $secret = Secret::create([
             'content' => encrypt($request->content),
             'token'      => Secret::generateToken(),
             'expires_at' => now()->addDay(),
+            'user_id' => auth()->id(),
+            'max_views'    => $request->max_views,
+            'current_views' => 0,
         ]);
 
         $url = route('secrets.show', $secret->token);
@@ -34,14 +38,18 @@ class SecretController extends Controller
     {
         $secret = Secret::where('token', $token)->first();
 
-        if (!$secret || $secret->isExpired()) {
-            abort(404, 'Секрет не найден или уже уничтожен.');
+        if (!$secret || !$secret->canBeViewed()) {
+            abort(404, 'Секрет не найден или уже недоступен.');
         }
 
         $decryptedContent = Crypt::decrypt($secret->content);
 
-        $secret->delete();
+        $remainingViews = $secret->max_views - $secret->current_views - 1;
 
-        return view('secrets.show', compact('decryptedContent'));
+        $secret->incrementViews();
+
+        $wasDestroyed = !Secret::where('token', $token)->exists();
+
+        return view('secrets.show', compact('decryptedContent', 'wasDestroyed', 'remainingViews'));
     }
 }

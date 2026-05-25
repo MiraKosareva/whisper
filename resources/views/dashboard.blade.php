@@ -1,21 +1,66 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Мои секреты') }}
-        </h2>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Whisper — самоуничтожающиеся сообщения</title>
+     <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="antialiased bg-white text-gray-900">
+<div class="max-w-3xl mx-auto px-6 py-12">
+    
+    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-8">
+        <a href="{{ route('home') }}" class="hover:text-gray-600 transition">Главная</a>
+        <span>/</span>
+        <span class="text-gray-900">Личный кабинет</span>
+    </nav>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 text-center">
-                    <p class="mb-4">Здесь пока ничего нет. Создайте свой первый секрет!</p>
-                    <a href="{{ route('secrets.create') }}" 
-                       class="inline-block rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-                        Создать секрет
-                    </a>
-                </div>
-            </div>
+    <h2 class="text-2xl font-bold mb-2">Мои секреты</h2>
+    <p class="text-gray-500 text-sm mb-8">
+        Секреты, которые вы создали. Они исчезнут после открытия получателем.
+    </p>
+
+    @if($secrets->isEmpty())
+        <div class="text-center py-12 text-gray-400">
+            <p class="mb-4">У вас пока нет секретов.</p>
+            <a href="{{ route('secrets.create') }}" 
+               class="inline-block px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition">
+                Создать первый
+            </a>
         </div>
-    </div>
-</x-app-layout>
+    @else
+        <div class="space-y-3">
+            @foreach($secrets as $secret)
+                <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-lg">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm text-gray-900 truncate">
+                            {{ Str::limit(Crypt::decrypt($secret->content), 60) }}
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">
+                            {{ $secret->created_at->format('d.m.Y H:i') }}
+                            @if($secret->isExpired())
+                                <span class="text-red-400 ml-2">Истёк</span>
+                            @else
+                                <span class="text-green-500 ml-2">Активен</span>
+                            @endif
+                        </p>
+                    </div>
+                    <button 
+                        onclick="copyToClipboard('{{ route('secrets.show', $secret->token) }}')"
+                        class="text-xs text-gray-400 hover:text-indigo-600 transition ml-4"
+                    >
+                        Копировать ссылку
+                    </button>
+                </div>
+            @endforeach
+        </div>
+    @endif
+</div>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text);
+    }
+</script>
+</body>
+</html>
