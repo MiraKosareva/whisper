@@ -12,9 +12,9 @@ Route::get('/', function () {
 Route::view('/', 'welcome')->name('home');
 
 Route::prefix('secret')->name('secrets.')->group(function () {
-    Route::get('/create', [SecretController::class, 'create'])->name('create');  // Форма создания
-    Route::post('/', [SecretController::class, 'store'])->name('store');         // Сохранить секрет
-    Route::get('/{token}', [SecretController::class, 'show'])->name('show');     // Показать секрет
+    Route::get('/create', [SecretController::class, 'create'])->name('create');
+    Route::post('/', [SecretController::class, 'store'])->name('store');
+    Route::get('/{token}', [SecretController::class, 'show'])->name('show');
 });
 
 Route::middleware('auth')->group(function () {

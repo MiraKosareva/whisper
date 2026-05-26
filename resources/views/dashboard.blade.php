@@ -7,13 +7,26 @@
      <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="antialiased bg-white text-gray-900">
+    <header class="border-b border-gray-100">
+            <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+                <a href="/" class="text-xl font-bold tracking-tight">
+                    whisper
+                </a>
+                <nav class="flex gap-6 text-sm">
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="hover:text-indigo-600 transition">Личный кабинет</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="hover:text-indigo-600 transition">Выйти</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="hover:text-indigo-600 transition">Войти</a>
+                        <a href="{{ route('register') }}" class="hover:text-indigo-600 transition">Регистрация</a>
+                    @endauth
+                </nav>
+            </div>
+        </header>
 <div class="max-w-3xl mx-auto px-6 py-12">
-    
-    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-8">
-        <a href="{{ route('home') }}" class="hover:text-gray-600 transition">Главная</a>
-        <span>/</span>
-        <span class="text-gray-900">Личный кабинет</span>
-    </nav>
 
     <h2 class="text-2xl font-bold mb-2">Мои секреты</h2>
     <p class="text-gray-500 text-sm mb-8">

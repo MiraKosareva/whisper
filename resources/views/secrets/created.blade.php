@@ -29,9 +29,14 @@
             </button>
         </div>
 
-        <a href="{{ route('secrets.create') }}" class="text-sm text-indigo-600 hover:text-indigo-500 transition">
-            Создать ещё один секрет →
-        </a>
+        <div class="flex items-center justify-between">
+            <a href="{{ route('home') }}" class="text-sm text-gray-400 hover:text-gray-600 transition">
+                ← На главную
+            </a>
+            <a href="{{ route('secrets.create') }}" class="text-sm text-indigo-600 hover:text-indigo-500 transition">
+                Создать ещё один секрет →
+            </a>
+        </div>
 
         <script>
             function copyUrl() {

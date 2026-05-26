@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Whisper — самоуничтожающиеся сообщения</title>
-    <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
      <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="antialiased bg-white text-gray-900">
@@ -18,6 +17,10 @@
                 <nav class="flex gap-6 text-sm">
                     @auth
                         <a href="{{ route('dashboard') }}" class="hover:text-indigo-600 transition">Личный кабинет</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="hover:text-indigo-600 transition">Выйти</button>
+                        </form>
                     @else
                         <a href="{{ route('login') }}" class="hover:text-indigo-600 transition">Войти</a>
                         <a href="{{ route('register') }}" class="hover:text-indigo-600 transition">Регистрация</a>
